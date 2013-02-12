@@ -1,0 +1,22 @@
+﻿
+<script src="~/Scripts/jquery.signalR-1.0.0-rc2.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script src="~/Scripts/toastr.min.js"></script>
+    <script>
+        $(function () {
+            var hubNotifier = $.connection.Notifier;
+            hubNotifier.client.notified = function (message) {
+                toastr.info(message.title, message.Content, { positionClass: 'toast-bottom-right' });
+            };
+            
+            hubNotifier.client.userConnected = function (user, id) {
+                $('#UserList').append($('<li id="' + id + '">' + user + ' connected</li>'));
+                toastr.info("User Connected:", user, { positionClass: 'toast-bottom-right' });
+            };
+            
+            hubNotifier.client.userDisconnected = function (user, id) {
+                $('#' + id).remove();
+                toastr.warning("User Disconnected", user, { positionClass: 'toast-bottom-right' });
+            };
+        });
+	</script>

@@ -1,0 +1,19 @@
+﻿@model dynamic
+@{
+    Func<string, string> selected = (current) =>
+                                        {
+                                            if (!string.IsNullOrEmpty(current) && current.ToLowerInvariant() == ViewBag.NavSelected)
+                                                return "class=\"active\"";
+                                            return string.Empty;
+                                        };
+}
+<!-- NAVBAR
+    ================================================== -->
+<div class="masthead">
+        <ul class="nav nav-pills pull-right">
+          <li @selected("home")><a href="/">Home</a></li>
+          <li  @selected("home")><a href="/Priorities">Priorities</a></li>
+          @Html.Partial("_LoginPartial")
+        </ul>
+        <h3 class="muted">SignalR Demos</h3>
+      </div>

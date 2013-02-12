@@ -1,0 +1,76 @@
+
+## Notify User Connection to others with Hub
+
+Add the ability to notify all the users connected to an app of the connection of a new user
+	public class NotifyMessage
+	{
+	    public string From { get; set; }
+	    public string Content { get; set; }
+	    public DateTime Created { get; set; }
+
+	    public NotifyMessage()
+	    {
+	        Created = DateTime.Now;
+	    }
+	}
+
+	[HubName("Notifier")]
+	public class DefaultNotifierHub : Hub
+	{
+
+	    public void Notify(NotifyMessage message)
+	    {
+	        Clients.Others.notified(message);
+	    }
+	}
+
+	//POST AccountController.Login
+	var msg = new NotifyMessage { Content = model.UserName + " Connected", From = "Server" };
+	var myHubContext = GlobalHost.ConnectionManager.GetHubContext<DefaultNotifierHub>();
+	myHubContext.Clients.All.notified(msg);
+
+
+	//client _Master
+	<script>
+	    $(function () {
+	        var hub = $.connection.Notifier;
+	        var $newItem = $('#message');
+
+	        hub.client.notified = function (message) {
+	            toastr.warning(message.title, message.Content);
+	        };
+
+	        $.connection.hub.start().done(function () {
+	        	$('#btn').on('click',function(){
+	        		hub.server.notify($('#message').val());
+	        	})
+	        });
+	    });
+	</script>
+
+
+## Notify messages from admin with PersistentConnection
+
+
+### Shell app
+
+// Connect to the service
+        var connection = new Connection("http://localhost:52460/notify");
+
+        // Print the message when it comes in
+        connection.Received += data => Console.WriteLine(data);
+
+        // Start the connection
+        connection.Start().Wait();
+
+        string line = null;
+        while((line = Console.ReadLine()) != null)
+        {
+            // Send a message to the server
+            connection.Send(line).Wait();
+        }
+
+
+
+
+        http://localhost:63768/

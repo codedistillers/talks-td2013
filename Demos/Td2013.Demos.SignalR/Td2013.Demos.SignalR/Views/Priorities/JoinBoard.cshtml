@@ -1,0 +1,23 @@
+﻿@model Td2013.Demos.SignalR.Models.JoinPriorityListCommand
+
+@{
+    ViewBag.Title = "JoinBoard";
+}
+
+<h2>Join List [@Model.BoardName]</h2>
+@Html.ValidationSummary()
+
+<form class="form-horizontal" method="POST">
+  <div class="control-group">
+    <label class="control-label" for="UserName">User Name</label>
+    <div class="controls">
+      <input type="text" id="UserName" name="UserName" placeholder="User">
+    </div>
+  </div>
+  <div class="control-group">
+      <div class="controls">
+          <input type="hidden" name="BoardName" value="@Model.BoardName"/>
+          <button type="submit" class="btn btn-large btn-inverse">Create</button>
+      </div>
+  </div>
+</form>

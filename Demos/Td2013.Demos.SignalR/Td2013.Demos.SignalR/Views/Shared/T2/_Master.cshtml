@@ -1,0 +1,90 @@
+﻿@{
+    Layout = null;
+    ViewBag.Title = "Application";
+    ViewBag.IsHome = true;
+}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+                <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+            <![endif]-->
+
+    @*<link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />*@
+    <meta name="viewport" content="width=device-width" />
+    @Styles.Render("~/bundles/fonts")
+    @Styles.Render("~/bundles/css")
+    <link rel="stylesheet" href="/Content/font-awesome.css">
+    @Styles.Render("~/Content/css/jqueryui")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="~/Content/toastr.min.css" rel="stylesheet" />
+    <link href="~/Content/home.css" rel="stylesheet" />
+    <style type="text/css">
+        body {
+        padding-top: 20px;
+        padding-bottom: 40px;
+      }
+
+      /* Custom container */
+      .container-narrow {
+        margin: 0 auto;
+        max-width: 700px;
+      }
+      .container-narrow > hr {
+        margin: 30px 0;
+      }
+
+      /* Main marketing message and sign up button */
+      .jumbotron {
+        margin: 60px 0;
+        text-align: center;
+      }
+      .jumbotron h1 {
+        font-size: 72px;
+        line-height: 1;
+      }
+      .jumbotron .btn {
+        font-size: 21px;
+        padding: 14px 24px;
+      }
+
+      /* Supporting marketing content */
+      .marketing {
+        margin: 60px 0;
+      }
+      .marketing p + h4 {
+        margin-top: 28px;
+      }
+    </style>
+    <title>@ViewBag.Title</title>
+</head>
+<body >
+    <div class="container-narrow">
+        @Html.Partial("~/Views/Shared/T2/_navbar.cshtml")
+    
+      @RenderSection("jumbotron",required:false)
+      <hr>
+
+      <div class="row-fluid marketing">
+        @RenderBody()
+      </div>
+
+      <hr>
+    @Html.Partial("~/Views/Shared/T2/_Footer.cshtml")
+            
+        
+       </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/angular")
+    @Scripts.Render("~/bundles/jqueryui")
+    
+    @Html.Partial("~/Views/Shared/_Notify.cshtml")
+
+    @RenderSection("scripts", required: false)
+    
+</body>
+</html>

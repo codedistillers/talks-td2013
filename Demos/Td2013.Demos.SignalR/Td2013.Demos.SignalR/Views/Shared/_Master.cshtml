@@ -1,0 +1,83 @@
+﻿@{
+    Layout = null;
+    ViewBag.Title = "Application";
+}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+                <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+            <![endif]-->
+
+    @*<link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />*@
+    <meta name="viewport" content="width=device-width" />
+    @Styles.Render("~/bundles/fonts")
+    @Styles.Render("~/bundles/css")
+    <link rel="stylesheet" href="/Content/font-awesome.css">
+    @Styles.Render("~/Content/css/jqueryui")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="~/Content/toastr.min.css" rel="stylesheet" />
+    <link href="~/Content/home.css" rel="stylesheet" />
+    <style type="text/css">
+        body {
+            padding: 40px;
+            padding-top: 100px;
+            padding-bottom: 60px;
+        }
+        @@media (max-width: 767px) {
+
+            body {
+            padding: 20px;
+            padding-top: 60px;
+            padding-bottom: 60px;
+        }
+        }
+    </style>
+    <title>@ViewBag.Title</title>
+</head>
+<body >
+    @Html.Partial("_navbar")
+    <div class="container-fluid">
+    </div>
+    <div class="container-fluid">@RenderBody()</div>
+    <div class="container-fluid">
+    </div>
+    @Html.Partial("_Footer")
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/angular")
+    @Scripts.Render("~/bundles/jqueryui")
+    <script src="~/Scripts/jquery.signalR-1.0.0-rc2.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script src="~/Scripts/toastr.min.js"></script>
+
+    
+    <input type="text" id="newitem" placeholder="enter new item"/>
+    <button id="additemtolist">Notify</button>
+                    
+    <script>
+        $(function () {
+            var hub = $.connection.Notifier;
+            var $newItem = $('#newitem');
+
+            hub.client.notified = function (message) {
+                toastr.warning(message.title, message.Content, { positionClass: 'toast-bottom-full-width' });
+            };
+
+            $.connection.hub.start().done(function() {
+                $('#additemtolist').on('click', function (e) {
+                    
+                    hub.server.notify($newItem.val());
+
+                });
+            });
+        });
+	</script>
+    @RenderSection("scripts", required: false)
+    <div id="topbottom"></div>
+    
+</body>
+</html>

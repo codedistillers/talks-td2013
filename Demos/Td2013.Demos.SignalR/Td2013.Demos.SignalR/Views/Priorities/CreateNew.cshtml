@@ -1,0 +1,56 @@
+﻿@model Td2013.Demos.SignalR.Models.CreatePriorityListCommand
+
+@{
+    ViewBag.Title = "title";
+}
+
+
+@Html.ValidationSummary()
+<div class="row-fluid"  >
+<div class="span6">
+    <h2>Create New List</h2>
+    <form class="form-horizontal" method="POST" action="/Priorities/CreateNew">
+        <div class="control-group">
+            <label class="control-label" for="inputEmail">List Name</label>
+            <div class="controls">
+                <input type="text" id="Title" name="Title" placeholder="Enter list name">
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="inputUser">User Name</label>
+            <div class="controls">
+                <input type="text" id="OwnerName" name="OwnerName" placeholder="Your Name">
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <button type="submit" name="Create" class="btn btn-large btn-inverse">Create</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="span6">
+    <h2>Join One</h2>
+    <form class="form-horizontal" method="POST" action="/Priorities/JoinBoard">
+        <div class="control-group">
+            <label class="control-label" for="BoardName">List Name</label>
+            <div class="controls">
+                <input type="text" id="BoardName" name="BoardName" placeholder="name of the list">
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="UserName">User Name</label>
+            <div class="controls">
+                <input type="text" id="UserName" name="UserName" placeholder="Your Name">
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <button type="submit" name="Join" class="btn btn-large btn-inverse">Join</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+    </div>

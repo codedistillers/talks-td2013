@@ -1,0 +1,57 @@
+﻿@model Td2013.Demos.SignalR.Models.LoginModel
+
+@{
+    ViewBag.Title = "Log in";
+}
+
+<hgroup class="title">
+    <h1>@ViewBag.Title.</h1>
+</hgroup>
+
+<section id="loginForm" class="row-fluid">
+    <div class="span6">
+       <h2>Local account Login</h2>
+    @using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl })) {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true)
+
+        <fieldset>
+            <legend>Log in Form</legend>
+            <ol>
+                <li>
+                    @Html.LabelFor(m => m.UserName)
+                    @Html.TextBoxFor(m => m.UserName)
+                    @Html.ValidationMessageFor(m => m.UserName)
+                </li>
+                <li>
+                    @Html.LabelFor(m => m.Password)
+                    @Html.PasswordFor(m => m.Password)
+                    @Html.ValidationMessageFor(m => m.Password)
+                </li>
+                <li>
+                    @Html.CheckBoxFor(m => m.RememberMe)
+                    @Html.LabelFor(m => m.RememberMe, new { @class = "checkbox" })
+                </li>
+            </ol>
+            <input type="submit" value="Log in" />
+        </fieldset>
+        <p>
+            @Html.ActionLink("Register", "Register") if you don't have an account.
+        </p>
+    } 
+    </div>
+    <div class="span6">
+        <h2>External</h2>
+        @Html.Action("ExternalLoginsList", new { ReturnUrl = ViewBag.ReturnUrl })
+    </div>
+
+    
+</section>
+
+<section class="social" id="socialLoginForm">
+    
+</section>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

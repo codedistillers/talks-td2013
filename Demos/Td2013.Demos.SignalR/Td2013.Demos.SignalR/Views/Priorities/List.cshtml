@@ -1,0 +1,141 @@
+﻿@model Td2013.Demos.SignalR.Models.PriorityList
+
+@{
+    ViewBag.Title = "Priorities [" + Model.Name + "]s";
+}
+
+<h2>@Model.Name</h2>
+
+<style>
+    #priorities { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+    #priorities li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 18px;background-color: thistle;}
+    #priorities li span { position: absolute; margin-left: -1.3em; }
+</style>
+<section >
+    <div class="row-fluid"  >
+        <div class="span4">
+            <div>
+                <h4><i class="icon-edit icon-2x"></i>New task</h4>
+                <p>
+                    <input type="text" id="newitem" placeholder="enter new item"/>
+                    <button id="additemtolist">Add Item</button>
+                    
+                </p>
+            </div>
+        </div>
+        <div class="span4" >
+            <div>
+                <h4><i class="icon-tasks icon-2x"></i>Priorities for list [@Model.Name]</h4>
+                <ul id="priorities">
+                    @foreach (var item in Model.List)
+                    {
+                        <li class="ui-state-default"><span class="ui-icon-star"></span>@item.Value</li>
+                    }
+                    @*<li class="ui-state-default"><span class="autonumber ui-icon-battery-0"></span>one</li>
+                    <li class="ui-state-default"><span class="autonumber ui-icon-battery-1"></span>two</li>
+                    <li class="ui-state-default"><span class="autonumber ui-icon-battery-2"></span>three</li>*@
+                </ul>
+            </div>
+        </div>
+    
+        <div class="span4">
+            <div>
+                <h4><i class="icon-user icon-2x"></i>Infos</h4>
+                <div class="alert alert-info">Created by @Model.OwnerName</div>
+                <ul id="UserList"></ul>
+                <span  class="alert alert-success" id="clientinfo"></span>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section scripts
+{
+    <script src="~/Scripts/jquery.signalR-1.0.0-rc2.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script>
+        $(function () {
+            //Connect to HUB named Priorities
+            var hub = $.connection.Priorities;
+            var $newItem = $('#newitem');
+            var currentList = "@Model.Name";
+            var currentUser = "@Model.CurrentUser";
+            
+            //Define the [keyDown] action that can be called by the server
+            //> will be called every time a user enter a new char 
+            //>and toggled by EnterKey Hub method
+            hub.client.keyDown = function(key,user) {
+                $newItem.val(key);
+                $('#clientinfo').html(user + " is typing");
+            };
+            
+            //Define the keyDown [addNewButtonClicked] that can be called by the server
+            //> will be called every time a user click add new item button
+            //>and toggled by ToggleNewItem Hub method
+            hub.client.addNewButtonClicked = function (user) {
+                $('#priorities').append($('<li>' + $newItem.val() + '</li>'));
+                $newItem.val('');
+                $('#clientinfo').html(user + " add new item");
+            };
+            
+            //Define the [itemSorted] action that can be called by the server
+            //> will be called every time a user moves down an item in the list
+            //>and toggled by sortItem  Hub method
+            hub.client.itemSorted = function(origin, newIndex,user) {
+                var $child = $($('#priorities li:eq(' + origin + ')'));
+                if (newIndex == 0) {
+                    var $parent = $('#priorities');
+                    $parent.prepend($child);
+                } else {
+                    var $previous = $($('#priorities li:eq(' + (newIndex - 1) + ')'));
+                    $child.insertAfter($previous);
+                }
+                
+                $('#priorities').sortable('refresh');
+                $('#clientinfo').html(user + " sorted the list");
+
+            };
+
+            hub.state.list = currentList;
+            hub.state.user = currentUser;
+            
+           
+            //Define the [keyDown] action that can be called by the server
+            //> will be called every time a user enter a new char 
+            //>and toggled by EnterKey Hub method
+           
+            $.connection.hub.start().done(function () {
+                hub.server.join(currentList,currentUser);
+                $newItem.on('keyup', function (e) {
+                    console.log(e.keyCode);
+                    if (e.keyCode == 13) {
+                        $('#additemtolist').trigger('click');
+                    }
+                    hub.server.enterKey(currentList,$newItem.val(),currentUser);
+                });
+
+                $('#additemtolist').click(function () {
+                    hub.server.toggleNewItem(currentList, $newItem.val(),currentUser);
+                    //$('#priorities').append($('<li>' + $newItem.val() + '</li>'));
+                    //$newItem.val('');
+                });
+
+
+                $('#priorities').sortable({
+                    start: function (event, ui) {
+                        ui.item.data('originIndex', ui.item.index());
+                    },
+                    stop: function (event, ui) {
+                        var origin = ui.item.data('originIndex');
+                        var newIndex = ui.item.index();
+                        hub.server.sortItem(currentList, currentUser,origin, newIndex);
+                        console.log("1:from " + origin + " to " + newIndex);
+
+                    }
+                });
+                
+                $(window).unload(function () { hub.server.leave(currentList, currentUser); });
+            });
+        });
+    </script>
+}

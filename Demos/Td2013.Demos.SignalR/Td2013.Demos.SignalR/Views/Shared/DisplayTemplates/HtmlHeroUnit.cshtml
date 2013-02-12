@@ -1,0 +1,18 @@
+﻿@model Artiface.Site.Accounts.Code.HtmlHeroUnit
+<div class="hero-unit">
+    <div>
+        <h1>
+            @Model.Title
+        </h1>
+        <p>
+            @Model.Content
+        </p>
+    </div>
+    @if (!string.IsNullOrWhiteSpace(Model.MoreButton))
+    {
+        <a class="btn btn-primary" href="@Model.Link">
+        @Model.MoreButton »
+    </a>
+    }
+    
+</div>

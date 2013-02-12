@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>TD2013 FR - SignalR Demos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+      <link href="Content/bootstrap.min.css" rel="stylesheet" />
+    <style type="text/css">
+      body {
+        padding-top: 20px;
+        padding-bottom: 40px;
+      }
+
+      /* Custom container */
+      .container-narrow {
+        margin: 0 auto;
+        max-width: 700px;
+      }
+      .container-narrow > hr {
+        margin: 30px 0;
+      }
+
+      /* Main marketing message and sign up button */
+      .jumbotron {
+        margin: 60px 0;
+        text-align: center;
+      }
+      .jumbotron h1 {
+        font-size: 72px;
+        line-height: 1;
+      }
+      .jumbotron .btn {
+        font-size: 21px;
+        padding: 14px 24px;
+      }
+
+      /* Supporting marketing content */
+      .marketing {
+        margin: 60px 0;
+      }
+      .marketing p + h4 {
+        margin-top: 28px;
+      }
+    </style>
+    <link href="Content/bootstrap-responsive.min.css" rel="stylesheet" />
+      <link href="Content/toastr.min.css" rel="stylesheet" />
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <![endif]-->
+
+  </head>
+
+  <body>
+
+    <div class="container-narrow">
+
+      <div class="masthead">
+        <ul class="nav nav-pills pull-right">
+          <li class="active"><a href="Index.html">Home</a></li>
+          <li><a href="Admin.html">Admin</a></li>
+          <li><a href="Priorities">Priorities</a></li>
+        </ul>
+        <h3 class="muted">SignalR</h3>
+      </div>
+
+      <hr>
+
+      <div class="row-fluid marketing">
+        <div class="span6">
+          <input type="text" id="msg" />
+          <input type="button" id="broadcast" value="broadcast" class="btn btn-warning btn-large"/>
+
+  
+        </div>
+
+          <div class="span6">
+              <h4>Derniers messages</h4>
+              <ul id="messages">
+              </ul>
+          </div>
+      </div>
+
+      <hr>
+
+      <div class="footer">
+        <p>&copy; Rui & Thomas</p>
+      </div>
+
+    </div> <!-- /container -->
+      <script src="Scripts/jquery-1.9.1.min.js"></script>
+      <script src="Scripts/jquery-ui-1.10.0.min.js"></script>
+      <script src="Scripts/toastr.min.js"></script>
+      <script src="Scripts/jquery.signalR-1.0.0-rc2.min.js"></script>
+      <script src="http://localhost:20131/signalr/hubs"></script>
+     <script type="text/javascript">
+         $(function () {
+             $.connection.hub.url = 'http://localhost:20131/signalr';
+             
+             var notifyHub = $.connection.Notifier;
+             
+             notifyHub.client.notified = function (message) {
+                 $('#messages').append($('<li>' + message + '</li>'));
+                 toastr.info("New Message",message, { positionClass: 'toast-bottom-right' });
+             };
+
+             $.connection.hub.start().done(function() {
+                 $('#broadcast').click(function () {
+                     notifyHub.server.notify($('#msg').val());
+                 });
+             });
+         });
+  </script>
+
+  
+  </body>
+</html>

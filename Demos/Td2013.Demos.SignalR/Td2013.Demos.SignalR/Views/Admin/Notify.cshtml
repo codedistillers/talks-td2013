@@ -1,0 +1,38 @@
+﻿@model dynamic
+
+@{
+    ViewBag.Title = "title";
+}
+<h3>Notify Users</h3>
+
+@using (Html.BeginForm("Notify","Admin",FormMethod.Post,new {@class = "form-horizontal"})) {
+        @Html.ValidationSummary(true)
+
+        <fieldset>
+            
+             <div class="control-group">
+                <label class="control-label" for="message">Message</label>
+                <div class="controls">
+                    <input name="message" id="message" type="text" placeholder="Enter a message to broadcast">
+                </div>
+            </div>
+             <div class="control-group">
+                <label class="control-label" ></label>
+                <div class="controls">
+                    <button value="Log in" id="sendBtn">Send</button>
+                </div>
+            </div>
+            
+        </fieldset>
+} 
+
+@section scripts
+{
+    <script>
+        $(function () {
+            var connection = $.connection('/notify');
+
+            $('#sendBtn').on('click', function() { $(this).submit(); });
+        });
+	</script>
+}
